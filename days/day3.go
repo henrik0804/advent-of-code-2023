@@ -3,10 +3,9 @@ package days
 import (
 	"errors"
 	"fmt"
+	"henrik/advent-of-code-2024/utils"
 	"log"
 	"strconv"
-
-	"henrik/advent-of-code-2024/utils"
 	"unicode"
 )
 
