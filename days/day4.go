@@ -148,7 +148,7 @@ func handleTicketCopies(ticketCopyIndices *[]int, copyCount int, tickets []ticke
 	return handleTicketCopies(ticketCopyIndices, copyCount, tickets)
 }
 
-//this produced a stack overflow with bigger input arrays
+//this worked, but produced a stack overflow with bigger input arrays
 
 /* func handleTicketCopies(ticketCopyIndices *[]int, copyCount int, tickets []ticket) int {
 	if len(*ticketCopyIndices) == 0 {
