@@ -26,17 +26,31 @@ func DayFour() {
 
 	tickets := getTickets(scratchCards)
 
-	totalPoints := 0
+	var wonCopies []int
 
-	for _, ticket := range tickets {
+	totalPoints := 0
+	totalCards := 0
+
+	for index, ticket := range tickets {
 		winCount := getWinningNumberMatchCount(ticket)
+		totalCards += winCount
+
+		for i := 0; i < winCount; i++ {
+			wonCopies = append(wonCopies, index+i+1)
+		}
+
+		totalCards += handleTicketCopies(&wonCopies, 0, tickets)
 
 		if winCount > 1 {
 			totalPoints += getPointNumber(winCount)
 		} else {
 			totalPoints += winCount
 		}
+
+		totalCards++
 	}
+
+	fmt.Println("The total amount of Scratchcards won is: ", totalCards)
 
 	fmt.Println("The total Point-Number from all Scratchcards is: ", totalPoints)
 
@@ -111,3 +125,44 @@ func convertToNumber(numString string) (int, error) {
 
 	return num, nil
 }
+
+func handleTicketCopies(ticketCopyIndices *[]int, copyCount int, tickets []ticket) int {
+	if len(*ticketCopyIndices) == 0 {
+		return copyCount
+	}
+
+	nextTicketIndices := make([]int, 0)
+
+	for _, ticketIndex := range *ticketCopyIndices {
+		winCount := getWinningNumberMatchCount(tickets[ticketIndex])
+
+		for i := 0; i < winCount; i++ {
+			nextTicketIndices = append(nextTicketIndices, ticketIndex+i+1)
+		}
+
+		copyCount += winCount
+	}
+
+	*ticketCopyIndices = nextTicketIndices
+
+	return handleTicketCopies(ticketCopyIndices, copyCount, tickets)
+}
+
+//this produced a stack overflow with bigger input arrays
+
+/* func handleTicketCopies(ticketCopyIndices *[]int, copyCount int, tickets []ticket) int {
+	if len(*ticketCopyIndices) == 0 {
+		return copyCount
+	}
+
+	ticketIndex := (*ticketCopyIndices)[len(*ticketCopyIndices)-1]
+	winCount := getWinningNumberMatchCount(tickets[ticketIndex])
+
+	*ticketCopyIndices = (*ticketCopyIndices)[:len(*ticketCopyIndices)-1]
+
+	for i := 0; i < winCount; i++ {
+		*ticketCopyIndices = append(*ticketCopyIndices, ticketIndex+i+1)
+	}
+
+	return handleTicketCopies(ticketCopyIndices, copyCount+winCount, tickets)
+} */
