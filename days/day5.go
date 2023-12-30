@@ -6,6 +6,7 @@ import (
 	"henrik/advent-of-code-2024/utils"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 type RangeEntry struct {
@@ -41,6 +42,7 @@ func DayFive() {
 		}
 	}
 
+	var wg sync.WaitGroup
 	nearestLocationP1 := int(^uint(0) >> 1)
 	nearestLocation := int(^uint(0) >> 1)
 	for index, seed := range seeds {
@@ -51,14 +53,22 @@ func DayFive() {
 		if index%2 != 0 {
 			continue
 		}
+
 		seedRange := seeds[index+1]
-		for i := 0; i < seedRange; i++ {
-			location := getLocationFromSeed(seed+i, sourceMaps)
-			if location < nearestLocation {
-				nearestLocation = location
+		wg.Add(1)
+
+		go func(seed, seedRange int) {
+			defer wg.Done()
+
+			for i := 0; i < seedRange; i++ {
+				location := getLocationFromSeed(seed+i, sourceMaps)
+				if location < nearestLocation {
+					nearestLocation = location
+				}
 			}
-		}
+		}(seed, seedRange)
 	}
+	wg.Wait()
 
 	fmt.Println("The lowest location number for single seeds is: ", nearestLocationP1)
 	fmt.Println("The lowest location number for seed ranges is: ", nearestLocation)
