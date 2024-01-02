@@ -33,6 +33,8 @@ func main() {
 		days.DayFive()
 	case "6":
 		days.DaySix()
+	case "7":
+		days.DaySeven()
 	}
 
 }
